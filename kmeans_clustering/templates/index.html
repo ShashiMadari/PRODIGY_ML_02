@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Customer Analysis</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        input, select, button { margin: 10px; padding: 8px; }
+        .container { width: 300px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Retail Customer Analysis</h2>
+
+        <input type="number" id="age" placeholder="Age">
+        <input type="number" id="income" placeholder="Annual Income (k$)">
+        <input type="number" id="spendingScore" placeholder="Spending Score">
+
+        <select id="gender">
+            <option value="1">Male</option>
+            <option value="0">Female</option>
+        </select>
+
+        <button onclick="predictCluster()">Predict Segment</button>
+
+        <h3 id="result"></h3>
+    </div>
+
+    <script>
+        function predictCluster() {
+            let age = document.getElementById("age").value;
+            let income = document.getElementById("income").value;
+            let spendingScore = document.getElementById("spendingScore").value;
+            let gender = document.getElementById("gender").value;
+
+            fetch("http://127.0.0.1:5000/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ age, income, spending_score: spendingScore, gender })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerText = "Predicted Cluster: " + data.cluster;
+            })
+            .catch(error => console.log("Error:", error));
+        }
+    </script>
+
+</body>
+</html>
